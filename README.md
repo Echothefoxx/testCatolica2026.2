@@ -1,2 +1,2 @@
 # testCatolica2026.2
-Teste da UNICAP 2026.2 ProgImp
+Repositório de teste de da.. para a turma de Programação Imperativa, 2026.2.

@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class sample1 {
@@ -13,7 +12,7 @@ public class sample1 {
 
         System.out.print("De onde começar? ");
         int init = input.nextInt();
-        System.out.print("Onde acabo?");
+        System.out.print("Onde acabo? ");
         int end = input.nextInt();
 
         for (int i = init; i <= end; i++) {
@@ -43,3 +42,4 @@ public class sample1 {
         input.close();
     }
 }
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <title>Caluladora IRPF</title>
+</head>
+    <body>
+        <div>
+            <h3>
+                Qual seu salário bruto?
+                <input id="sal" type="number" inputmode="numeric" step="0.01" placeholder="Insira a quantidade em R$" required>
+            </h3>
+        </div>
+            <h3>
+                Quantos dependentes você tem? (Opicional)
+                <input id="children" type="number" inputmode="numeric" placeholder="0">
+            </h3>
+            <h3>
+                Quanto dinheiro você gasta em outras deducções (Pensâo, Previdência, etc)?
+                <input id="misc" type="number" inputmode="decimal" placeholder="Insira a quantidade em R$" required>
+            </h3>
+            <button id="send" type="submit" onclick="calc()">Enviar</button>
+            <button id="clean" type="reset" onclick="clean()">Limpar</button>
+
+            <div>
+                <h3>Valor final: R$<span id="basef"></span>.</h3>
+                <h3>Alíquota impostuaria: <span id="faixa"></span>%.</h3>
+                <h3>Total deduzido: R$<span id="divida"></span>.</h3>
+            </div>
+    </body>
+    </script>
+</html>

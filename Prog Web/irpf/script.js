@@ -1,8 +1,9 @@
 function calc() {
 let saldo = Number(document.getElementById("sal").value);
+let checkbox = document.querySelector("#deduzir");
 let salario = 0;
 
-saldo = calcInit(saldo, document.getElementById("children").value || 0, document.getElementById("misc").value || 0);
+saldo = calcInit(saldo, document.getElementById("children").value || 0, document.getElementById("misc").value || 0, checkbox.checked);
 
 switch (true) {
     case (saldo > 4664.68):
@@ -55,8 +56,12 @@ function calcAliquota(salario, desconto) {
     
 }
 
-function calcInit(salario, child, other) {
-    salario = salario - ( ( child * 189.59) + other + 528 );
+function calcInit(salario, child, other, deducaoBase) {
+    let base = 0;
+    if (deducaoBase === false) {
+        base = 528;
+    }
+    salario = salario - ( ( child * 189.59) + other + base );
     if (salario < 0) {
         salario = 0;
     }

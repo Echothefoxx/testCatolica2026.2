@@ -1,43 +1,36 @@
 function calc() {
 let saldo = Number(document.getElementById("sal").value);
-let descInit = ( document.getElementById("children").value * 189.59) + document.getElementById("misc").value;
-let base = saldo - descInit - 528;
-let baseinit = base;
-let desc;
+let salario;
+
+saldo = calcInit(saldo, document.getElementById("children").value, document.getElementById("misc").value);
 
 switch (true) {
     case (base > 4664.68):
-        base -= 397.81;
-        desc = (base * 0.275);
+        salario = faixa275(saldo);
         break;
     case (base > 3751.06):
-        base -= 192.25;
-        desc = (base * 0.225);
+        salario = faixa225(saldo);
         break;
     case (base > 2826.66):
-        base -= 53.59;
-        desc = (base * 0.15);
+        salario = faixa15(saldo);
         break;
     case (base > 2112):
-        desc = (base * 0.075);
+        salario = faixa75(saldo);
         break;
     case (base < 0):
         base = 0;
         desc = 0;
         break;
     default:
-        desc = 0;
+        salario = faixa0(saldo);
         break;
     }
-    if (desc != 0) {
-        aliq = desc / baseinit;
-    } else {
-        aliq = 0;
-    }
-    Math.round(aliq * 100) / 100;
 
-    document.getElementById("basef").textContent = base.toFixed(2);
-    document.getElementById("divida").textContent = desc.toFixed(2);
+    let desc = calcDesc(salario, saldo);
+
+    document.getElementById("basef").textContent = salario;
+    document.getElementById("divida").textContent = desc;
+    document.getElementById("faixa").textContent = calcAliquota(salario, desc);
 }
 
 function clean() {
@@ -52,15 +45,51 @@ function clean() {
     document.getElementById("faixa").textContent = "";
 }
 
-function calcAliquota(sal, ir) {
-    if (desc != 0) {
-        aliq = desc / baseinit;
+function calcAliquota(salario, desconto) {
+    if (desconto != 0) {
+        let aliq = desconto / salario;
+        return Math.round(aliq * 100) / 100;
     } else {
-        aliq = 0;
+        return 0;
     }
-    Math.round(aliq * 100) / 100;
+    
+}
+
+function calcInit(salario, child, other) {
+    salario = salario - ( ( child * 189.59) + other + 528 );
+    if (salario < 0) {
+        salario = 0;
+    }
+    return salario;
 }
 
 function faixa0(salario) {
+    return salario.toFixed(2);
+}
+function faixa75(salario) {
+    salario -= (base * 0.075);
+    return salario.toFixed(2);
+}
+function faixa15(salario) {
+    salario -= 53.59;
+    salario -= (base * 0.15);
+    return salario.toFixed(2);
+}
+function faixa225(salario) {
+    salario -= 192.25;
+    salario -= (base * 0.225);
+    return salario.toFixed(2);
+}
+function faixa275(salario) {
+    salario -= 397.81;
+    salario -= (base * 0.275);
+    return salario.toFixed(2);
+}
 
+function calcDesc(base, salarioFinal) {
+    if (salarioFinal > 0) {
+        return (base - salarioFinal).toFixed(2);
+    } else {
+        return base.toFixed(2);
+    }
 }

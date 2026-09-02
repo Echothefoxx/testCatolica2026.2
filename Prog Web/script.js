@@ -29,10 +29,15 @@ switch (true) {
         desc = 0;
         break;
     }
+    if (desc != 0) {
+        aliq = desc / baseinit;
+    } else {
+        aliq = 0;
+    }
+    Math.round(aliq * 100) / 100;
 
     document.getElementById("basef").textContent = base.toFixed(2);
     document.getElementById("divida").textContent = desc.toFixed(2);
-    document.getElementById("faixa").textContent = 
 }
 
 function clean() {

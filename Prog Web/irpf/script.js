@@ -89,25 +89,19 @@ function faixa0(salario) {
     return salario.toFixed(2);
 }
 function faixa75(salario) {
-    salario -= ((salario - 2112) * 0.075);
+    salario -= ((salario * 0.075) - 158.40);
     return salario.toFixed(2);
 }
 function faixa15(salario) {
-    salario -= 2826.66
-    salario -= 53.59;
-    salario -= (salario * 0.15);
+    salario -= (( salario* 0.15) - 370.40);
     return salario.toFixed(2);
 }
 function faixa225(salario) {
-    salario -= 3751.06;
-    salario -= 192.25;
-    salario -= (salario * 0.225);
+    salario -= ((salario * 0.225) - 651.73);
     return salario.toFixed(2);
 }
 function faixa275(salario) {
-    salario -= 4664.68;
-    salario -= 397.81;
-    salario -= (salario * 0.275);
+    salario -= (salario * 0.275) - 884.96;
     return salario.toFixed(2);
 }
 

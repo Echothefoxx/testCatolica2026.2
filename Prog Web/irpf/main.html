@@ -8,32 +8,30 @@
     <title>Caluladora IRPF</title>
 </head>
     <body>
-        <box>
-            <div>
+        <div class="flex-container">
+            <div class="box">
                 <h3>
-                    Qual seu salário bruto?
-                    <input id="sal" type="number" inputmode="numeric" step="0.01" placeholder="Insira a quantidade em R$" required>
-                </h3>
+                    Qual seu salário bruto?</h3>
+                <h3>Quantos dependentes você tem? (Opicional)</h3>
+                <h3>Quanto dinheiro você gasta em outras deducções (Pensão, Previdência, etc.)?</h3>
             </div>
-            <h3>
-                Quantos dependentes você tem? (Opicional)
-                <input id="children" type="number" inputmode="numeric" placeholder="0">
-            </h3>
-            <h3>
-                Quanto dinheiro você gasta em outras deducções (Pensão, Previdência, etc.)?
-                <input id="misc" type="number" inputmode="decimal" placeholder="Insira a quantidade em R$" required>
-            </h3>
-            <button id="send" type="submit" onclick="calc()">Enviar</button>
-            <button id="clean" type="reset" onclick="clean()">Limpar</button>
-        </box>
-
-            <div>
+            <div class="box">
+                <input id="sal" type="number" inputmode="numeric" step="0.01" placeholder="Insira a quantidade em R$" required> <br>
+                <input id="children" type="number" inputmode="numeric" placeholder="0"> <br>
+                <input id="misc" type="number" inputmode="decimal" placeholder="Insira a quantidade em R$" required> <br>
+            </div>
+            <div class="box">
                 <h3>Valor final: R$<span id="basef"></span>.</h3>
                 <h3>Alíquota impostuaria: <span id="faixa"></span>%.</h3>
                 <h3>Base de cálculo: R$<span id="baseini"></span>.</h3>
                 <h3>Total deduzido: R$<span id="divida"></span>.</h3>
             </div>
+        </div>
+        <div id="ui" >
+            <button id="send" type="submit" onclick="calc()">Enviar</button>
+            <button id="clean" type="reset" onclick="clean()">Limpar</button>
             <input type="checkbox" id="deduzir">Marque essa caixa para <b>NÃO</b> utilizar a dedução padrão do IRPF
+            <h4>*Valores baseados nos dados retirados do <a href="https://www27.receita.fazenda.gov.br/simulador-irpf/">site da receita federal.</a></h4>
+        </div>
     </body>
-    </script>
 </html>

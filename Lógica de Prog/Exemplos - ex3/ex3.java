@@ -62,4 +62,5 @@ public class ex3 {
             }
     }
     return -1;
+    }
 }

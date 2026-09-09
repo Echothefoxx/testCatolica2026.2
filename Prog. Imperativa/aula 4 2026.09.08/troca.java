@@ -2,9 +2,17 @@ public class troca {
     public static void main(String[] args) {
         int[] fibonnacci = new int[20];
         int[] primos = new int[20];
+        int[] fim = new int[20];
 
         primo(primos, primos.length);
-        System.out.println(primos);
+        fibonnacci(fibonnacci, fibonnacci.length);
+        somarVetores(fibonnacci, primos, fim, 20);
+        printVetor(fim);
+        int maior = maiorNumero(fim);
+        System.out.println("Maior número do vetor: " + maior);
+        int[] arrayNumero = new int[10];
+        numeroEmVetor(arrayNumero, maior);
+        printVetor(arrayNumero);
     }
 
     public static void fibonnacci(int[] vetor, int tamanho) {
@@ -20,8 +28,8 @@ public class troca {
         }
     }
 
-    public static boolean acharPrimo(int[] vetor, int alvo, int lim) {
-        for (int i = 1; i < lim; i++) {
+    public static boolean acharPrimo(int[] vetor, int alvo) {
+        for (int i = 2; i < alvo; i++) {
             if (alvo % i == 0) {
                 return false;
             }
@@ -34,17 +42,17 @@ public class troca {
         int x = 2;
 
         while (i < tamanho) {
-            while (!acharPrimo(vetor, x, i)) {
+            while (!acharPrimo(vetor, x)) {
                 x++;
             }
             vetor[i] = x;
-            x = vetor[i];
             i++;
+            x++;
         }
     }
     public static void somarVetores(int[] vetorA, int[] vetorB, int[] vetorS, int limite) {
         for (int i = 0; i < limite; i++) {
-            vetorS[i] = vetorA[i] + vetorB[limite - i];
+            vetorS[i] = vetorA[i] + vetorB[(limite - 1) - i];
         }
     }
     
@@ -53,21 +61,28 @@ public class troca {
         for (int i = 1; i < vetor.length; i++) {
             System.out.printf(", %d", vetor[i]);
         }
+        System.out.println();
     }
-    public static void printMaior(int[] vetor) {
+    public static int maiorNumero(int[] vetor) {
         int maior = vetor[0];
         for (int i = 1; i < vetor.length; i++) {
             if (vetor[i] > maior) {
                 maior = vetor[i];
             }
         }
-        System.out.println(maior);
+        return maior;
     }
-    public static void numeroEmVetor(int[i] vetor, int alvo) {
-        String[] parts = String.valueOf(alvo).split();
-        for (int i = 10; i < parts.length; i--) {
-            //CONTINUAR DP
+    public static void numeroEmVetor(int[] vetorAlvo, int alvo) {
+        String[] parts = String.valueOf(alvo).split("");
+        int n = 0;
+        int zLeft = 10 - parts.length;
+        for (int i = 0; i < 10; i++) {
+            if (zLeft <= i) { 
+                vetorAlvo[i] = Integer.parseInt(parts[n]);
+                n++;
+            } else {
+                vetorAlvo[i] = 0;
+            }
         }
     }
 }
-

@@ -74,12 +74,8 @@ public class troca {
     }
     public static void numeroEmVetor(int[] vetorAlvo, int alvo) {
         for (int i = 9; i >= 0; i--) {
-            if (alvo > 0) {
-                vetorAlvo[i] = alvo % 10;
-                alvo /= 10;
-            } else {
-                vetorAlvo[i] = 0;
-            }
+            vetorAlvo[i] = alvo % 10;
+            alvo /= 10;
         }
     }
 }

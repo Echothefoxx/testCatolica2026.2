@@ -73,13 +73,10 @@ public class troca {
         return maior;
     }
     public static void numeroEmVetor(int[] vetorAlvo, int alvo) {
-        String[] parts = String.valueOf(alvo).split("");
-        int n = 0;
-        int zLeft = 10 - parts.length;
-        for (int i = 0; i < 10; i++) {
-            if (zLeft <= i) { 
-                vetorAlvo[i] = Integer.parseInt(parts[n]);
-                n++;
+        for (int i = 9; i >= 0; i--) {
+            if (alvo > 0) {
+                vetorAlvo[i] = alvo % 10;
+                alvo /= 10;
             } else {
                 vetorAlvo[i] = 0;
             }

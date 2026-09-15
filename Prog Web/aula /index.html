@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+   <html lang="pt-BR" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Lista de Tarefas - Back4App</title>
+       <style>
+           body { 
+               font-family: Arial, sans-serif; 
+               max-width: 800px; 
+               margin: 0 auto; 
+               padding: 20px; 
+           }
+           .tarefa { 
+               border: 1px solid #ddd; 
+               padding: 15px; 
+               margin: 10px 0; 
+               border-radius: 5px; 
+           }
+           .concluida { background-color: #e8f5e8; }
+           .prioridade-alta { border-left: 5px solid #ff4444; }
+           .prioridade-media { border-left: 5px solid #ffaa00; }
+           .prioridade-baixa { border-left: 5px solid #00aa00; }
+           button { 
+               padding: 10px 15px; 
+               margin: 5px; 
+               cursor: pointer; 
+           }
+           #novaTarefa { 
+               width: 100%; 
+               padding: 10px; 
+               margin: 10px 0; 
+           }
+       </style>
+   
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:xd_Signature msdt:dt="string"></mso:xd_Signature>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor msdt:dt="string">SharePoint App</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor>
+<mso:Order msdt:dt="string">300.000000000000</mso:Order>
+<mso:xd_ProgID msdt:dt="string"></mso:xd_ProgID>
+<mso:_ExtendedDescription msdt:dt="string"></mso:_ExtendedDescription>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author msdt:dt="string">SharePoint App</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author>
+<mso:ComplianceAssetId msdt:dt="string"></mso:ComplianceAssetId>
+<mso:TemplateUrl msdt:dt="string"></mso:TemplateUrl>
+<mso:ReferenceId msdt:dt="string"></mso:ReferenceId>
+<mso:ContentTypeId msdt:dt="string">0x010100C70E3C2B638FF1429C4D4697936B4B14</mso:ContentTypeId>
+<mso:TriggerFlowInfo msdt:dt="string"></mso:TriggerFlowInfo>
+<mso:_SourceUrl msdt:dt="string"></mso:_SourceUrl>
+<mso:_SharedFileIndex msdt:dt="string"></mso:_SharedFileIndex>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+   <body>
+       <h1>Minha Lista de Tarefas</h1>
+       
+       <div>
+           <input type="text" id="novaTarefa" placeholder="Digite uma nova tarefa...">
+           <select id="prioridade">
+               <option value="baixa">Baixa</option>
+               <option value="media">Média</option>
+               <option value="alta">Alta</option>
+           </select>
+           <button onclick="adicionarTarefa()">Adicionar</button>
+       </div>
+       
+       <button onclick="carregarTarefas()">Atualizar Lista</button>
+       
+       <div id="listaTarefas"></div>
+
+       <script>
+           // SUBSTITUA PELAS SUAS CREDENCIAIS DO BACK4APP
+           const APP_ID = 'censurado ;3';
+           const REST_KEY = 'hj nn :)';
+           const SERVER_URL = 'https://parseapi.back4app.com';
+
+           // Função para fazer requisições HTTP
+           async function requisicaoAPI(endpoint, metodo = 'GET', dados = null) {
+               const config = {
+                   method: metodo,
+                   headers: {
+                       'X-Parse-Application-Id': APP_ID,
+                       'X-Parse-REST-API-Key': REST_KEY,
+                       'Content-Type': 'application/json'
+                   }
+               };
+
+               if (dados) {
+                   config.body = JSON.stringify(dados);
+               }
+
+               try {
+                   const response = await fetch(`${SERVER_URL}${endpoint}`, config);
+                   return await response.json();
+               } catch (error) {
+                   console.error('Erro na requisição:', error);
+                   return null;
+               }
+           }
+
+           // Carregar e exibir tarefas
+           async function carregarTarefas() {
+               const resultado = await requisicaoAPI('/parse/classes/Tarefa');
+               const listDiv = document.getElementById('listaTarefas');
+               
+               if (resultado && resultado.results) {
+                   listDiv.innerHTML = '';
+                   resultado.results.forEach(tarefa => {
+                       const div = document.createElement('div');
+                       div.className = `tarefa prioridade-${tarefa.prioridade}`;
+                       if (tarefa.concluida) div.className += ' concluida';
+                       
+                       div.innerHTML = `
+                           <h3>${tarefa.titulo}</h3>
+                           <p>${tarefa.descricao || 'Sem descrição'}</p>
+                           <p><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+                           <button onclick="alternarConclusao('${tarefa.objectId}', ${!tarefa.concluida})">
+                               ${tarefa.concluida ? 'Reabrir' : 'Concluir'}
+                           </button>
+                           <button onclick="excluirTarefa('${tarefa.objectId}')">Excluir</button>
+                       `;
+                       listDiv.appendChild(div);
+                   });
+               }
+           }
+
+           // Adicionar nova tarefa
+           async function adicionarTarefa() {
+               const titulo = document.getElementById('novaTarefa').value;
+               const prioridade = document.getElementById('prioridade').value;
+               
+               if (!titulo.trim()) {
+                   alert('Digite um título para a tarefa!');
+                   return;
+               }
+
+               const novaTarefa = {
+                   titulo: titulo,
+                   descricao: '',
+                   concluida: false,
+                   prioridade: prioridade
+               };
+
+               const resultado = await requisicaoAPI('/parse/classes/Tarefa', 'POST', novaTarefa);
+               
+               if (resultado && resultado.objectId) {
+                   document.getElementById('novaTarefa').value = '';
+                   carregarTarefas();
+               }
+           }
+
+           // Alterar status de conclusão
+           async function alternarConclusao(objectId, concluida) {
+               const dados = { concluida: concluida };
+               await requisicaoAPI(`/parse/classes/Tarefa/${objectId}`, 'PUT', dados);
+               carregarTarefas();
+           }
+
+           // Excluir tarefa
+           async function excluirTarefa(objectId) {
+               if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                   await requisicaoAPI(`/parse/classes/Tarefa/${objectId}`, 'DELETE');
+                   carregarTarefas();
+               }
+           }
+
+           // Carregar tarefas quando a página abrir
+           window.onload = carregarTarefas;
+       </script>
+   </body>
+   </html>

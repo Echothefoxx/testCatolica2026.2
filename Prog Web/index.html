@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Virtual - Back4App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f5f5f5;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .carrinho-badge {
+            background: #e74c3c;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .filtros {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .produto-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .produto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .produto-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .produto-card h3 {
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+        .produto-card .preco {
+            font-size: 24px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .produto-card .estoque {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .carrinho-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .carrinho-panel.aberto {
+            right: 0;
+        }
+        .carrinho-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .carrinho-item {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .carrinho-item h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .carrinho-item .quantidade-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .carrinho-item button {
+            padding: 5px 10px;
+        }
+        .carrinho-total {
+            padding: 20px;
+            background: #ecf0f1;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        select, input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .categoria-badge {
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+    </style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:xd_Signature msdt:dt="string"></mso:xd_Signature>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor msdt:dt="string">SharePoint App</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor>
+<mso:Order msdt:dt="string">500.000000000000</mso:Order>
+<mso:xd_ProgID msdt:dt="string"></mso:xd_ProgID>
+<mso:_ExtendedDescription msdt:dt="string"></mso:_ExtendedDescription>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author msdt:dt="string">SharePoint App</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author>
+<mso:ComplianceAssetId msdt:dt="string"></mso:ComplianceAssetId>
+<mso:TemplateUrl msdt:dt="string"></mso:TemplateUrl>
+<mso:ReferenceId msdt:dt="string"></mso:ReferenceId>
+<mso:ContentTypeId msdt:dt="string">0x010100C70E3C2B638FF1429C4D4697936B4B14</mso:ContentTypeId>
+<mso:TriggerFlowInfo msdt:dt="string"></mso:TriggerFlowInfo>
+<mso:_SourceUrl msdt:dt="string"></mso:_SourceUrl>
+<mso:_SharedFileIndex msdt:dt="string"></mso:_SharedFileIndex>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body>
+    <div class="header">
+        <h1>🛒 Loja Virtual</h1>
+        <button class="btn btn-primary" onclick="toggleCarrinho()">
+            Carrinho <span class="carrinho-badge" id="carrinhoCount">0</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="filtros">
+            <select id="filtroCategoria" onchange="filtrarProdutos()">
+                <option value="">Todas as Categorias</option>
+                <option value="Informática">Informática</option>
+                <option value="Periféricos">Periféricos</option>
+                <option value="Acessórios">Acessórios</option>
+            </select>
+            
+            <select id="filtroPreco" onchange="filtrarProdutos()">
+                <option value="">Todos os Preços</option>
+                <option value="0-100">Até R$ 100</option>
+                <option value="100-500">R$ 100 - R$ 500</option>
+                <option value="500-99999">Acima de R$ 500</option>
+            </select>
+            
+            <input type="text" id="buscaNome" placeholder="Buscar por nome..." onkeyup="filtrarProdutos()">
+        </div>
+
+        <div class="produtos-grid" id="produtosGrid"></div>
+    </div>
+
+    <!-- Painel do Carrinho -->
+    <div class="carrinho-panel" id="carrinhoPanel">
+        <div class="carrinho-header">
+            <h2>Meu Carrinho</h2>
+            <button class="btn btn-primary" onclick="toggleCarrinho()">✕</button>
+        </div>
+        <div id="carrinhoItens"></div>
+        <div class="carrinho-total">
+            Total: R$ <span id="totalCarrinho">0.00</span>
+        </div>
+        <div style="padding: 20px;">
+            <button class="btn btn-success" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script>
+        // SUBSTITUA PELAS SUAS CREDENCIAIS DO BACK4APP
+        const APP_ID = 'SEU_APPLICATION_ID_AQUI';
+        const REST_KEY = 'SEU_REST_API_KEY_AQUI';
+        const SERVER_URL = 'https://parseapi.back4app.com';
+
+        // Gerar ID único para a sessão do carrinho
+        let sessaoCarrinho = localStorage.getItem('sessaoCarrinho') || 
+                             'sessao_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('sessaoCarrinho', sessaoCarrinho);
+
+        // Função genérica para requisições à API
+        async function requisicaoAPI(endpoint, metodo = 'GET', dados = null) {
+            const config = {
+                method: metodo,
+                headers: {
+                    'X-Parse-Application-Id': APP_ID,
+                    'X-Parse-REST-API-Key': REST_KEY,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (dados) {
+                config.body = JSON.stringify(dados);
+            }
+
+            try {
+                const response = await fetch(`${SERVER_URL}${endpoint}`, config);
+                return await response.json();
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                return null;
+            }
+        }
+
+        // Carregar e exibir produtos
+        async function carregarProdutos(filtros = {}) {
+            let endpoint = '/parse/classes/Produto?order=nome';
+            
+            // Aplicar filtros se existirem
+            if (Object.keys(filtros).length > 0) {
+                endpoint += '&where=' + encodeURIComponent(JSON.stringify(filtros));
+            }
+
+            const resultado = await requisicaoAPI(endpoint);
+            const grid = document.getElementById('produtosGrid');
+            
+            if (resultado && resultado.results) {
+                grid.innerHTML = '';
+                resultado.results.forEach(produto => {
+                    const card = document.createElement('div');
+                    card.className = 'produto-card';
+                    card.innerHTML = `
+                        <img src="${produto.imagemURL}" alt="${produto.nome}">
+                        <span class="categoria-badge">${produto.categoria}</span>
+                        <h3>${produto.nome}</h3>
+                        <p>${produto.descricao}</p>
+                        <p class="estoque">Estoque: ${produto.estoque} unidades</p>
+                        <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
+                        <button class="btn btn-success" onclick="adicionarAoCarrinho('${produto.objectId}', '${produto.nome}', ${produto.preco})">
+                            Adicionar ao Carrinho
+                        </button>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Filtrar produtos
+        function filtrarProdutos() {
+            const categoria = document.getElementById('filtroCategoria').value;
+            const precoRange = document.getElementById('filtroPreco').value;
+            const busca = document.getElementById('buscaNome').value.toLowerCase();
+
+            let filtros = {};
+
+            if (categoria) {
+                filtros.categoria = categoria;
+            }
+
+            if (precoRange) {
+                const [min, max] = precoRange.split('-').map(Number);
+                filtros.preco = { $gte: min, $lte: max };
+            }
+
+            if (busca) {
+                filtros.nome = { $regex: busca, $options: 'i' };
+            }
+
+            carregarProdutos(filtros);
+        }
+
+        // Adicionar produto ao carrinho
+        async function adicionarAoCarrinho(produtoId, nome, preco) {
+            // Verificar se produto já está no carrinho
+            const buscaExistente = await requisicaoAPI(
+                `/parse/classes/ItemCarrinho?where=${encodeURIComponent(JSON.stringify({
+                    sessao: sessaoCarrinho,
+                    produto: { __type: 'Pointer', className: 'Produto', objectId: produtoId }
+                }))}&include=produto`
+            );
+
+            if (buscaExistente.results && buscaExistente.results.length > 0) {
+                // Atualizar quantidade
+                const item = buscaExistente.results[0];
+                const novaQuantidade = item.quantidade + 1;
+                const novoSubtotal = preco * novaQuantidade;
+
+                await requisicaoAPI(`/parse/classes/ItemCarrinho/${item.objectId}`, 'PUT', {
+                    quantidade: novaQuantidade,
+                    subtotal: novoSubtotal
+                });
+            } else {
+                // Adicionar novo item
+                await requisicaoAPI('/parse/classes/ItemCarrinho', 'POST', {
+                    produto: { __type: 'Pointer', className: 'Produto', objectId: produtoId },
+                    quantidade: 1,
+                    subtotal: preco,
+                    sessao: sessaoCarrinho
+                });
+            }
+
+            alert(`${nome} adicionado ao carrinho!`);
+            carregarCarrinho();
+        }
+
+        // Carregar itens do carrinho
+        async function carregarCarrinho() {
+            const resultado = await requisicaoAPI(
+                `/parse/classes/ItemCarrinho?where=${encodeURIComponent(JSON.stringify({
+                    sessao: sessaoCarrinho
+                }))}&include=produto`
+            );
+
+            const carrinhoDiv = document.getElementById('carrinhoItens');
+            const countBadge = document.getElementById('carrinhoCount');
+            let total = 0;
+
+            if (resultado && resultado.results) {
+                countBadge.textContent = resultado.results.length;
+                carrinhoDiv.innerHTML = '';
+
+                resultado.results.forEach(item => {
+                    total += item.subtotal;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'carrinho-item';
+                    itemDiv.innerHTML = `
+                        <h4>${item.produto.nome}</h4>
+                        <p>R$ ${item.produto.preco.toFixed(2)} cada</p>
+                        <div class="quantidade-controls">
+                            <button class="btn" onclick="alterarQuantidade('${item.objectId}', ${item.quantidade - 1}, ${item.produto.preco})">-</button>
+                            <span>${item.quantidade}</span>
+                            <button class="btn" onclick="alterarQuantidade('${item.objectId}', ${item.quantidade + 1}, ${item.produto.preco})">+</button>
+                        </div>
+                        <p><strong>Subtotal: R$ ${item.subtotal.toFixed(2)}</strong></p>
+                        <button class="btn btn-primary" onclick="removerDoCarrinho('${item.objectId}')">Remover</button>
+                    `;
+                    carrinhoDiv.appendChild(itemDiv);
+                });
+
+                document.getElementById('totalCarrinho').textContent = total.toFixed(2);
+            } else {
+                countBadge.textContent = '0';
+                carrinhoDiv.innerHTML = '<p style="padding: 20px; text-align: center;">Carrinho vazio</p>';
+                document.getElementById('totalCarrinho').textContent = '0.00';
+            }
+        }
+
+        // Alterar quantidade
+        async function alterarQuantidade(itemId, novaQuantidade, preco) {
+            if (novaQuantidade < 1) {
+                removerDoCarrinho(itemId);
+                return;
+            }
+
+            await requisicaoAPI(`/parse/classes/ItemCarrinho/${itemId}`, 'PUT', {
+                quantidade: novaQuantidade,
+                subtotal: preco * novaQuantidade
+            });
+
+            carregarCarrinho();
+        }
+
+        // Remover do carrinho
+        async function removerDoCarrinho(itemId) {
+            if (confirm('Deseja remover este item do carrinho?')) {
+                await requisicaoAPI(`/parse/classes/ItemCarrinho/${itemId}`, 'DELETE');
+                carregarCarrinho();
+            }
+        }
+
+        // Toggle painel do carrinho
+        function toggleCarrinho() {
+            document.getElementById('carrinhoPanel').classList.toggle('aberto');
+        }
+
+        // Finalizar compra
+        async function finalizarCompra() {
+            const resultado = await requisicaoAPI(
+                `/parse/classes/ItemCarrinho?where=${encodeURIComponent(JSON.stringify({
+                    sessao: sessaoCarrinho
+                }))}`
+            );
+
+            if (!resultado.results || resultado.results.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+
+            // Aqui você poderia criar um registro de Pedido
+            // Por simplicidade, vamos apenas limpar o carrinho
+            for (const item of resultado.results) {
+                await requisicaoAPI(`/parse/classes/ItemCarrinho/${item.objectId}`, 'DELETE');
+            }
+
+            alert('Compra finalizada com sucesso! (Este é um exemplo didático)');
+            
+            // Gerar nova sessão
+            sessaoCarrinho = 'sessao_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('sessaoCarrinho', sessaoCarrinho);
+            
+            carregarCarrinho();
+            toggleCarrinho();
+        }
+
+        // Inicializar
+        window.onload = () => {
+            carregarProdutos();
+            carregarCarrinho();
+        };
+    </script>
+</body>
+</html>
